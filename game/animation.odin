@@ -49,23 +49,6 @@ animation_length :: proc(anim: Animation_Name) -> f32 {
 	return l
 }
 
-animation_draw :: proc(anim: Animation, pos: Vec2, flip_x := false) {
-	if anim.current_frame == .None {
-		return
-	}
-
-	texture := atlas_textures[anim.current_frame]
-	
-	// Note: The texture.offset may contain a non-zero offset. This offset occurs
-	// when textures have some empty pixels in the upper regions. Instead of the
-	// packer writing in those empty pixels (wasting space), it record how much
-	// you need to offset your texture to compensate for the missing empty pixels.
-	offset_pos := pos + {f32(texture.offset.x), f32(texture.offset.y)}
-	atlas_rect := texture.rect
-
-	if flip_x {
-		atlas_rect.width = -atlas_rect.width
-	}
-
-	rl.DrawTextureRec(atlas, atlas_rect, offset_pos, rl.WHITE)
+animation_atlas_texture :: proc(anim: Animation) -> Atlas_Texture {
+	return atlas_textures[anim.current_frame]
 }

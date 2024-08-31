@@ -3,7 +3,19 @@
 	[
 		{
 			"path": ".",
-		}
+		},
+		{
+			"path": "C:\\Odin\\base",
+		},
+		{
+			"path": "C:\\Odin\\core",
+		},
+		{
+			"path": "C:\\Odin\\examples",
+		},
+		{
+			"path": "C:\\Odin\\vendor\\raylib"
+		},
 	],
 	"build_systems":
 	[
@@ -21,11 +33,12 @@
 			"linux": {
 				"working_dir": "$project_path",
 				"shell_cmd": "./build_hot_reload.sh && ./game.bin &",
-			}
+			},
 		}
 	],
 	"settings":
 	{
+		"auto_complete": false,
 		"LSP":
 		{
 			"odin":

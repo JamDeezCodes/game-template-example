@@ -13,5 +13,5 @@ log.txt
 *.dSYM
 linux
 game/atlas.odin
-resources/atlas.png
+atlas.png
 build/

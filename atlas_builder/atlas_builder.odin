@@ -24,11 +24,15 @@ ATLAS_SIZE :: 512
 TILESET_WIDTH :: 10
 TILE_SIZE :: 10
 
+// for package line at top of atlas metadata file
 PACKAGE_NAME :: "game"
 TEXTURES_DIR :: "textures"
 
 LETTERS_IN_FONT :: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890?!&.,_:[]"
 FONT_FILENAME :: "font.ttf"
+
+ATLAS_PNG_OUTPUT_PATH :: "atlas.png"
+ATLAS_ODIN_OUTPUT_PATH :: "game/atlas.odin"
 
 dir_path_to_file_infos :: proc(path: string) -> []os.File_Info {
 	d, derr := os.open(path, os.O_RDONLY)
@@ -720,16 +724,25 @@ main :: proc() {
 
 	rl.ImageAlphaCrop(&atlas, 0)
 
-	rl.ExportImage(atlas, "resources/atlas.png")
+	rl.ExportImage(atlas, ATLAS_PNG_OUTPUT_PATH)
 
-	f, _ := os.open("game/atlas.odin", os.O_WRONLY | os.O_CREATE | os.O_TRUNC)
+	f, _ := os.open(ATLAS_ODIN_OUTPUT_PATH, os.O_WRONLY | os.O_CREATE | os.O_TRUNC)
 	defer os.close(f)
 
 	fmt.fprintf(f, "package %s\n", PACKAGE_NAME)
 	fmt.fprintln(f, "")
-	fmt.fprintln(f, "// Note: The types Rect and Vec2i can be defined as:")
+	fmt.fprintln(f, "// Note: The types Rect and Vec2 can be defined as:")
 	fmt.fprintln(f, "// Rect :: rl.Rectangle")
-	fmt.fprintln(f, "// Vec2i :: [2]int")
+	fmt.fprintln(f, "// Vec2 :: rl.Vector2")
+	fmt.fprintln(f, "// Or if you don't use raylib:")
+	fmt.fprintln(f, "// Rect :: struct {")
+	fmt.fprintln(f, "//     x: f32,")
+	fmt.fprintln(f, "//     y: f32,")
+	fmt.fprintln(f, "//     width: f32,")
+	fmt.fprintln(f, "//     height: f32,")
+	fmt.fprintln(f, "// }")
+	fmt.fprintln(f, "// Vec2 :: [2]f32")
+	fmt.fprintln(f, "// Just make sure you have something along those lines the same package as this file.")
 	fmt.fprintln(f, "")
 
 	fmt.fprintln(f, "Texture_Name :: enum {")
@@ -742,8 +755,8 @@ main :: proc() {
 
 	fmt.fprintln(f, "Atlas_Texture :: struct {")
 	fmt.fprintln(f, "\trect: Rect,")
-	fmt.fprintln(f, "\toffset: Vec2i,")
-	fmt.fprintln(f, "\tdocument_size: Vec2i,")
+	fmt.fprintln(f, "\toffset: Vec2,")
+	fmt.fprintln(f, "\tdocument_size: Vec2,")
 	fmt.fprintln(f, "\tduration: f32,")
 	fmt.fprintln(f, "}")
 	fmt.fprintln(f, "")
@@ -814,7 +827,7 @@ main :: proc() {
 	fmt.fprintln(f, "Atlas_Animation :: struct {")
 	fmt.fprintln(f, "\tfirst_frame: Texture_Name,")
 	fmt.fprintln(f, "\tlast_frame: Texture_Name,")
-	fmt.fprintln(f, "\tdocument_size: Vec2i,")
+	fmt.fprintln(f, "\tdocument_size: Vec2,")
 	fmt.fprintln(f, "\tloop_direction: Tag_Loop_Dir,")
 	fmt.fprintln(f, "\trepeat: u16,")
 	fmt.fprintln(f, "}")

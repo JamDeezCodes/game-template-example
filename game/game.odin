@@ -17,7 +17,7 @@ import "core:slice"
 import rl "vendor:raylib"
 
 // This loads the atlas at compile time and stores it in the dll, it is loaded in `game_hot_reloaded`
-ATLAS_DATA :: #load("../resources/atlas.png")
+ATLAS_DATA :: #load("../atlas.png")
 PIXEL_WINDOW_HEIGHT :: 180
 
 Player :: struct {
@@ -86,15 +86,35 @@ update :: proc() {
 	g_mem.some_number += 1
 }
 
+COLOR_BG :: rl.Color { 41, 61, 49, 255 }
+COLOR_FG :: rl.Color { 241, 167, 189, 255 }
+
 draw :: proc() {
 	rl.BeginDrawing()
-	rl.ClearBackground({ 41, 61, 49, 255 })
+	rl.ClearBackground(COLOR_BG)
 	
 	rl.BeginMode2D(game_camera())
-	rl.DrawRectangleV({20, 20}, {10, 10}, rl.RED)
-	rl.DrawRectangleV({-30, -20}, {10, 10}, rl.GREEN)
 	rl.DrawTextureRec(atlas, atlas_textures[.Bush].rect, {}, rl.WHITE)
-	animation_draw(g_mem.player.anim, g_mem.player.pos, g_mem.player.flip_x)
+
+	{
+		anim_texture := animation_atlas_texture(g_mem.player.anim)
+		offset_pos := g_mem.player.pos + anim_texture.offset
+		atlas_rect := anim_texture.rect
+
+		dest := Rect {
+			offset_pos.x,
+			offset_pos.y,
+			atlas_rect.width,
+			atlas_rect.height,
+		}
+
+		if g_mem.player.flip_x {
+			atlas_rect.width = -atlas_rect.width
+		}
+		rl.DrawTexturePro(atlas, atlas_rect, dest, {anim_texture.document_size.x/2, anim_texture.document_size.y - 1}, 0, rl.WHITE)
+	}
+	
+	rl.DrawRectangleV({-200, 0}, {400, 16}, COLOR_FG)
 	rl.DrawCircleV(g_mem.player.pos, 1, rl.YELLOW)
 	rl.EndMode2D()
 
