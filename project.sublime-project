@@ -9,10 +9,10 @@
 	[
 		{
 			"file_regex": "^(.+)\\(([0-9]+):([0-9]+)\\) (.+)$",
-			"name": "Game template",
+			"name": "Game template example",
 			"windows": {
 				"working_dir": "$project_path",
-				"shell_cmd": "build_hot_reload.bat && start game.exe",
+				"shell_cmd": "build_hot_reload.bat && start /D $project_path\\build\\hot_reload game.exe",
 			},
 			"osx": {
 				"working_dir": "$project_path",

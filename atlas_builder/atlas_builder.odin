@@ -27,7 +27,7 @@ TILE_SIZE :: 10
 PACKAGE_NAME :: "game"
 TEXTURES_DIR :: "textures"
 
-LETTERS_IN_FONT :: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890?!&.,"
+LETTERS_IN_FONT :: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890?!&.,_:[]"
 FONT_FILENAME :: "font.ttf"
 
 dir_path_to_file_infos :: proc(path: string) -> []os.File_Info {
@@ -720,9 +720,9 @@ main :: proc() {
 
 	rl.ImageAlphaCrop(&atlas, 0)
 
-	rl.ExportImage(atlas, "atlas.png")
+	rl.ExportImage(atlas, "resources/atlas.png")
 
-	f, _ := os.open("atlas.odin", os.O_WRONLY | os.O_CREATE | os.O_TRUNC)
+	f, _ := os.open("game/atlas.odin", os.O_WRONLY | os.O_CREATE | os.O_TRUNC)
 	defer os.close(f)
 
 	fmt.fprintf(f, "package %s\n", PACKAGE_NAME)
